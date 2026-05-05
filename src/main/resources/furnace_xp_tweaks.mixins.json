@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "net.blupillcosby.furnacexptweaks.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AbstractContainerMenuAccessor",
+    "AbstractFurnaceBlockEntityMixin",
+    "AbstractFurnaceMenuAccessor",
+    "AbstractFurnaceMenuMixin",
+    "AbstractFurnaceBlockMixin"
+  ],
+  "client": [
+    "client.AbstractContainerScreenAccessor",
+    "client.ScreenAccessor",
+    "client.AbstractFurnaceScreenMixin",
+    "client.AbstractFurnaceBlockItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

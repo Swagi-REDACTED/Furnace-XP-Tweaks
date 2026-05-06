@@ -40,7 +40,7 @@ public abstract class AbstractFurnaceBlockItemMixin {
         double pointsIntoLevel = furnaceXpExact - XpUtils.getExperienceToLevelDouble(wholeLevel);
         
         tooltip.add(furnaceXpTweaks$tag("Levels", "+" + wholeLevel, ChatFormatting.GOLD));
-        tooltip.add(furnaceXpTweaks$tag("Points", "+" + furnaceXpTweaks$fmt(pointsIntoLevel), ChatFormatting.GREEN));
+        tooltip.add(furnaceXpTweaks$tag("Points", "+" + (int) Math.floor(pointsIntoLevel), ChatFormatting.GREEN));
     }
 
     /** 
@@ -52,15 +52,4 @@ public abstract class AbstractFurnaceBlockItemMixin {
                 .append(Component.literal(value).withStyle(color));
     }
 
-    /** 
-     * Format to 1 decimal place with improved rounding (.5 and above rounds up).
-     */
-    @Unique
-    private static String furnaceXpTweaks$fmt(double value) {
-        long shifted = Math.round(value * 10);
-        long intPart = shifted / 10;
-        int dec = (int)(shifted % 10);
-        if (dec == 0) return String.valueOf(intPart);
-        return intPart + "." + dec;
-    }
 }

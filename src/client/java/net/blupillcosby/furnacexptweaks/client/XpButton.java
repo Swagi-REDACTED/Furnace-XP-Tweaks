@@ -126,11 +126,11 @@ public class XpButton extends AbstractWidget {
         Minecraft mc = Minecraft.getInstance();
         if (this.isHovered()) {
             LocalPlayer player = mc.player;
-            if (player == null || furnaceXpExact <= 0) {
+            if (player == null || furnaceXpExact < 1.0) {
                 double exactLevel = XpUtils.xpToLevel(furnaceXpExact);
                 int wholeLevel = (int) Math.floor(exactLevel);
                 double pointsIntoLevel = furnaceXpExact - XpUtils.getExperienceToLevelDouble(wholeLevel);
-                this.setTooltip(Tooltip.create(Component.literal("Levels: " + wholeLevel + "\nPoints: " + (int) pointsIntoLevel)));
+                this.setTooltip(Tooltip.create(Component.literal("Levels: " + wholeLevel + "\nPoints: " + (int) Math.floor(pointsIntoLevel))));
             } else {
                 double playerXpExact = XpUtils.getPlayerExperienceExact(player);
                 double combinedXp = playerXpExact + furnaceXpExact;

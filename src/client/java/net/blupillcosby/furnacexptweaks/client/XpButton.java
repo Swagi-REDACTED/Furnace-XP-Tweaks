@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -63,14 +64,33 @@ public class XpButton extends AbstractWidget {
         if (currentXp < 1.0) return; // Don't send packet if not claimable
 
         if (blockPos != null) {
-            CACHED_XP.put(blockPos, currentXp - Math.floor(currentXp)); // Optimistically update cache with remainder
+            double remainder = currentXp - Math.floor(currentXp);
+            CACHED_XP.put(blockPos, remainder);
+            
+            // Optimistically update the client-side BlockEntity state
+            if (Minecraft.getInstance().level != null) {
+                BlockEntity be = Minecraft.getInstance().level.getBlockEntity(blockPos);
+                if (be != null) {
+                    XpUtils.setStoredXpInBlockEntity(be, remainder);
+                }
+            }
+            
             ClientPlayNetworking.send(new ClaimXpPayload(blockPos));
         } else {
             // Fallback for menus where pos wasn't passed directly
             if (menu instanceof AbstractFurnaceMenuAccessorExtra menuExtra) {
                 BlockPos pos = menuExtra.furnaceXpTweaks$getBlockPos();
                 if (pos != null) {
-                    CACHED_XP.put(pos, currentXp - Math.floor(currentXp));
+                    double remainder = currentXp - Math.floor(currentXp);
+                    CACHED_XP.put(pos, remainder);
+                    
+                    if (Minecraft.getInstance().level != null) {
+                        BlockEntity be = Minecraft.getInstance().level.getBlockEntity(pos);
+                        if (be != null) {
+                            XpUtils.setStoredXpInBlockEntity(be, remainder);
+                        }
+                    }
+                    
                     ClientPlayNetworking.send(new ClaimXpPayload(pos));
                 }
             }

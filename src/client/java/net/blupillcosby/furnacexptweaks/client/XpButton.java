@@ -187,11 +187,4 @@ public class XpButton extends AbstractWidget {
         this.defaultButtonNarrationText(narrationElementOutput);
     }
 
-    private String furnaceXpTweaks$fmt(double value) {
-        long shifted = Math.round(value * 10);
-        long intPart = shifted / 10;
-        int dec = (int)(shifted % 10);
-        if (dec == 0) return String.valueOf(intPart);
-        return intPart + "." + dec;
-    }
 }

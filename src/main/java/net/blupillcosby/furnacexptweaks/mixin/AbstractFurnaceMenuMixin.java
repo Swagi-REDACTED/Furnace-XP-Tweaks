@@ -99,14 +99,22 @@ public abstract class AbstractFurnaceMenuMixin implements AbstractFurnaceMenuAcc
             return Double.longBitsToDouble(bits);
         }
 
-        // Server side: calculate exact double from recipes
+        // Server side: calculate exact double from recipes + universal field
+        double totalXp = 0;
+        
+        // 1. Universal field (fractional remainders)
+        if (net.blupillcosby.furnacexptweaks.XpUtils.isModSupportEnabled() && furnaceBlockEntity instanceof net.blupillcosby.furnacexptweaks.access.TechRebornExperienceAccessor acc) {
+            totalXp += acc.furnaceXpTweaks$getExperience();
+        }
+
+        // 2. Recipe map
         Reference2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed =
                 ((AbstractFurnaceBlockEntityAccessor) furnaceBlockEntity).furnaceXpTweaks$getRecipesUsed();
 
         if (furnaceBlockEntity.getLevel().recipeAccess() instanceof RecipeManager recipeManager) {
-            return XpUtils.calculateXpFromRecipesExact(recipesUsed, recipeManager);
+            totalXp += XpUtils.calculateXpFromRecipesExact(recipesUsed, recipeManager);
         }
-        return 0;
+        return totalXp;
     }
 
     @Override

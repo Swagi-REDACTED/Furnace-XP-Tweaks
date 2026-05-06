@@ -1,7 +1,7 @@
 # Furnace-XP-Tweaks
 Simple mod to store xp in furnaces for minecraft 26.1, has configurable level in config and auto gui color matching!!
 
-Mod support added as a bool in the config!
+Mod support added as a bool in the config I specifically added full tech reborn support and IronFurnaces but I tried to make an auto catching system!
 
 Note: this mod requires fzzy config, and optionally mod menu!
 

@@ -89,7 +89,7 @@ public class XpButton extends AbstractWidget {
             }
         }
 
-        boolean hasExp = furnaceXpExact > 0;
+        boolean hasExp = furnaceXpExact >= 1.0;
         boolean useAlt = FurnaceXPTweaks.CONFIG.useAltTextures.get();
         
         Identifier texture;

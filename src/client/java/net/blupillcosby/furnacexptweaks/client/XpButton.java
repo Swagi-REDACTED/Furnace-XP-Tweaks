@@ -51,16 +51,26 @@ public class XpButton extends AbstractWidget {
 
     @Override
     public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+        double currentXp = 0;
+        AbstractContainerMenu menu = menuSupplier.get();
+        if (menu instanceof AbstractFurnaceMenuAccessorExtra menuExtra) {
+            currentXp = menuExtra.furnaceXpTweaks$getStoredXpPoints();
+        }
+        if (currentXp < 1.0 && blockPos != null) {
+            currentXp = CACHED_XP.getOrDefault(blockPos, 0.0);
+        }
+
+        if (currentXp < 1.0) return; // Don't send packet if not claimable
+
         if (blockPos != null) {
-            CACHED_XP.put(blockPos, 0.0);
+            CACHED_XP.put(blockPos, currentXp - Math.floor(currentXp)); // Optimistically update cache with remainder
             ClientPlayNetworking.send(new ClaimXpPayload(blockPos));
         } else {
             // Fallback for menus where pos wasn't passed directly
-            AbstractContainerMenu menu = menuSupplier.get();
             if (menu instanceof AbstractFurnaceMenuAccessorExtra menuExtra) {
                 BlockPos pos = menuExtra.furnaceXpTweaks$getBlockPos();
                 if (pos != null) {
-                    CACHED_XP.put(pos, 0.0);
+                    CACHED_XP.put(pos, currentXp - Math.floor(currentXp));
                     ClientPlayNetworking.send(new ClaimXpPayload(pos));
                 }
             }

@@ -1,7 +1,7 @@
 # Furnace-XP-Tweaks
 Simple mod to store xp in furnaces for minecraft 26.1, has configurable level in config and auto gui color matching!!
 
-Mod support coming in 1.1
+Mod support coming in 1.1.0
 
 Note: this mod requires fzzy config, and optionally mod menu!
 

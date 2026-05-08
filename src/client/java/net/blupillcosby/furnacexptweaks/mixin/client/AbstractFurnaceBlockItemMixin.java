@@ -34,13 +34,22 @@ public abstract class AbstractFurnaceBlockItemMixin {
         double furnaceXpExact = XpUtils.getStoredXpFromStack(stack);
         if (furnaceXpExact <= 0) return;
 
-        // Display the item's inherent XP value (Levels and Points) independently of the player's XP
-        double exactLevel = XpUtils.xpToLevel(furnaceXpExact);
-        int wholeLevel = (int) Math.floor(exactLevel);
-        double pointsIntoLevel = furnaceXpExact - XpUtils.getExperienceToLevelDouble(wholeLevel);
-        
-        tooltip.add(furnaceXpTweaks$tag("Levels", "+" + wholeLevel, ChatFormatting.GOLD));
-        tooltip.add(furnaceXpTweaks$tag("Points", "+" + (int) Math.floor(pointsIntoLevel), ChatFormatting.GREEN));
+        // Display the item's inherent XP value (Levels and Points) relative to the player's current XP
+        double playerXpExact = XpUtils.getPlayerExperienceExact(player);
+        double combinedXp = playerXpExact + furnaceXpExact;
+        double finalExactLevel = XpUtils.xpToLevel(combinedXp);
+        int finalWholeLevel = (int) Math.floor(finalExactLevel);
+
+        int levelsGained = finalWholeLevel - player.experienceLevel;
+        int pointsGained;
+        if (levelsGained > 0) {
+            pointsGained = (int) (Math.floor(combinedXp) - XpUtils.getExperienceToLevelDouble(finalWholeLevel));
+        } else {
+            pointsGained = (int) (Math.floor(combinedXp) - Math.floor(playerXpExact));
+        }
+
+        tooltip.add(furnaceXpTweaks$tag("Levels", "+" + levelsGained, ChatFormatting.GOLD));
+        tooltip.add(furnaceXpTweaks$tag("Points", "+" + pointsGained, ChatFormatting.GREEN));
     }
 
     /** 

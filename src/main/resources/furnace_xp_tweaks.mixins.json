@@ -13,7 +13,6 @@
     "TechRebornMenuMixin",
     "TechRebornExperienceMixin",
     "TechRebornElectricFurnaceMixin",
-    "TechRebornRecipeCrafterMixin",
     "TechRebornIronFurnaceMixin",
     "IronFurnaceXpSuppressionMixin",
     "AbstractFurnaceBlockNativeSuppressionMixin",

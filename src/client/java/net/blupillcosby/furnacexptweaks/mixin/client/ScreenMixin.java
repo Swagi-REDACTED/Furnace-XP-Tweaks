@@ -81,6 +81,21 @@ public abstract class ScreenMixin {
 
         if (isVanilla) return true;
 
+        // Tech Reborn specific restriction
+        String menuClassName = menu.getClass().getName();
+        if (menuClassName.startsWith("techreborn.") || menuClassName.contains("reborncore.")) {
+            try {
+                java.lang.reflect.Method getBe = menu.getClass().getMethod("getBlockEntity");
+                Object be = getBe.invoke(menu);
+                if (be != null) {
+                    String beClassName = be.getClass().getName();
+                    boolean isSupportedTR = beClassName.equals("techreborn.blockentity.machine.iron.IronFurnaceBlockEntity") || 
+                                          beClassName.equals("techreborn.blockentity.machine.tier1.ElectricFurnaceBlockEntity");
+                    if (!isSupportedTR) return false;
+                }
+            } catch (Exception ignored) {}
+        }
+
         if (pos != null) {
             try {
                 String name = (String) menu.getClass().getMethod("getName").invoke(menu);

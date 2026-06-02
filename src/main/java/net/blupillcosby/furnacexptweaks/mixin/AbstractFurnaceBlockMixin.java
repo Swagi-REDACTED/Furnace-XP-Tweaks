@@ -46,20 +46,33 @@ public abstract class AbstractFurnaceBlockMixin {
 
         // Use Universal XP detection logic
         double xpExact = XpUtils.getStoredXpFromBlockEntity(blockEntity);
-        if (xpExact <= 0) return;
+        double flooredXp = Math.floor(xpExact);
+        if (flooredXp < 1) return;
 
         List<ItemStack> drops = cir.getReturnValue();
+        if (drops == null || drops.isEmpty()) return;
+
         for (ItemStack stack : drops) {
             // Check if the drop is the block itself (or related item)
             if (stack.getItem() != state.getBlock().asItem()) continue;
 
-            // Build the full NBT tag from the block entity
-            CompoundTag tag = blockEntity.saveWithFullMetadata(level.registryAccess());
+            TypedEntityData<?> existingData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+            CompoundTag tag = existingData != null ? existingData.copyTagWithoutId() : new CompoundTag();
+
+            // Clear unstackable block entity data
+            tag.remove("RecipesUsed");
+            tag.remove("recipesUsed");
+            tag.remove("recipes");
+            tag.remove("x");
+            tag.remove("y");
+            tag.remove("z");
+            tag.remove("id");
 
             // Embed the calculated double XP
-            tag.putDouble(FURNACE_XP_TWEAKS$XP_KEY, xpExact);
+            tag.putDouble(FURNACE_XP_TWEAKS$XP_KEY, flooredXp);
 
             stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(blockEntity.getType(), tag));
+            break;
         }
     }
 }

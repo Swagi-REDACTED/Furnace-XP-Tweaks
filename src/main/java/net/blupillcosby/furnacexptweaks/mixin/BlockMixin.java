@@ -35,7 +35,8 @@ public abstract class BlockMixin {
         if (blockEntity == null) return;
 
         double xp = XpUtils.getStoredXpFromBlockEntity(blockEntity);
-        if (xp <= 0) return;
+        double flooredXp = Math.floor(xp);
+        if (flooredXp < 1) return;
 
         List<ItemStack> drops = cir.getReturnValue();
         if (drops == null || drops.isEmpty()) return;
@@ -47,8 +48,17 @@ public abstract class BlockMixin {
                 TypedEntityData<?> existingData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
                 net.minecraft.nbt.CompoundTag tag = existingData != null ? existingData.copyTagWithoutId() : new net.minecraft.nbt.CompoundTag();
                 
+                // Clear unstackable block entity data
+                tag.remove("RecipesUsed");
+                tag.remove("recipesUsed");
+                tag.remove("recipes");
+                tag.remove("x");
+                tag.remove("y");
+                tag.remove("z");
+                tag.remove("id");
+
                 // Store our custom XP
-                tag.putFloat("furnacexptweaks:experience", (float) xp);
+                tag.putFloat("furnacexptweaks:experience", (float) flooredXp);
                 
                 // Re-apply to the stack
                 stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(blockEntity.getType(), tag));

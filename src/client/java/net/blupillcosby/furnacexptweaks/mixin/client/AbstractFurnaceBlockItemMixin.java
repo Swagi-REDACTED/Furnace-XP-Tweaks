@@ -32,7 +32,7 @@ public abstract class AbstractFurnaceBlockItemMixin {
         
         // Use Universal XP extraction from the stack
         double furnaceXpExact = XpUtils.getStoredXpFromStack(stack);
-        if (furnaceXpExact <= 0) return;
+        if (Math.floor(furnaceXpExact) < 1) return;
 
         // Display the item's inherent XP value (Levels and Points) relative to the player's current XP
         double playerXpExact = XpUtils.getPlayerExperienceExact(player);
